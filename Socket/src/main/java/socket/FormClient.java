@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import javax.swing.JButton;
@@ -68,6 +69,13 @@ public class FormClient extends JFrame {
 			try {
 				textArea.append("Iniciando conexao com o servidor..\n");
 				Socket socket = new Socket("192.168.0.4", 2345);
+				
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+				objectOutputStream.flush();
+				objectOutputStream.writeObject("Conectando ao servidor");
+				objectOutputStream.writeObject("Os dados dessa conexao " + socket.toString());
+				objectOutputStream.writeObject("FIM");
+				
 				textArea.append("Comunicacao feita com sucesso\n");
 				textArea.append("Servidor Aceitoo:" + socket.getInetAddress().toString());
 				textArea.append("Recebendo mensagens vindas do servidor\n");
