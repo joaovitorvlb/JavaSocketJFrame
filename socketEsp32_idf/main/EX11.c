@@ -1,9 +1,6 @@
 /*
-  Autor: Prof° Fernando Simplicio de Sousa
   Hardware: NodeMCU ESP32
   SDK-IDF: v3.1
-  Curso Online: Formação em Internet das Coisas (IoT) com ESP32
-  Link: https://www.microgenios.com.br/formacao-iot-esp32/
 */
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
@@ -138,6 +135,14 @@ void socketClient()
 	char *data = "Enviando do servidor para o cliente\r\n";
 	rc = send(sock, data, strlen(data), 0);
 	ESP_LOGI(TAG, "send: rc: %d", rc);
+
+	int len = recv(sock, rx_buffer, sizeof(rx_buffer) - 1, 0);
+	// Error occurred during receiving
+	if (len > 0) {
+		rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string
+        ESP_LOGI(TAG, "Received %d bytes from %s:", len, host_ip);
+        ESP_LOGI(TAG, "%s", rx_buffer);
+	}
 
 	rc = close(sock);
 	ESP_LOGI(TAG, "close: rc: %d", rc);
