@@ -119,6 +119,7 @@ void wifi_init_sta()
 void socketClient() 
 {
     int rc; 
+    char rx_buffer[128];
 	
 	ESP_LOGI(TAG, "start");
 	int sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -136,11 +137,13 @@ void socketClient()
 	rc = send(sock, data, strlen(data), 0);
 	ESP_LOGI(TAG, "send: rc: %d", rc);
 
+	//vTaskDelay( 300/portTICK_PERIOD_MS );
+
 	int len = recv(sock, rx_buffer, sizeof(rx_buffer) - 1, 0);
-	// Error occurred during receiving
+
 	if (len > 0) {
-		rx_buffer[len] = 0; // Null-terminate whatever we received and treat like a string
-        ESP_LOGI(TAG, "Received %d bytes from %s:", len, host_ip);
+		rx_buffer[len] = 0;
+        //ESP_LOGI(TAG, "Received %d bytes from %s:", len, host_ip);
         ESP_LOGI(TAG, "%s", rx_buffer);
 	}
 
