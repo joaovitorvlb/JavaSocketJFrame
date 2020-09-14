@@ -1,6 +1,12 @@
 package socket;
+
 import java.awt.EventQueue;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,6 +26,12 @@ public class FormServidor extends JFrame {
 
 	private JPanel contentPane;
 	JTextArea textArea;
+	private InputStream inBS;
+	private BufferedInputStream inputS;
+
+	byte[] messageByte = new byte[1000];
+	boolean end = false;
+	String dataString = "";
 
 	/**
 	 * Launch the application.
@@ -73,19 +85,21 @@ public class FormServidor extends JFrame {
 				ServerSocket serverSocket = new ServerSocket(9765);
 				textArea.append("Servidor rodando na porta 2345\n");
 				while (true) {
-					textArea.append("Aguardando conexao de cliente ..\n");
+					//textArea.append("Aguardando conexao de cliente ..\n");
 					Socket socket = serverSocket.accept();
-					textArea.append("Conexao esta aberto com cliente.: " + socket.getInetAddress().toString() + "\n");
-					textArea.append("Enviando dados para o cliente..\n");
-					ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-					objectOutputStream.flush();
-					objectOutputStream.writeObject("Cliente conectou com sucesso");
-					objectOutputStream.writeObject("Os dados dessa conexao " + socket.toString());
-					objectOutputStream.writeObject("Entao, ok, ate mais");
-					objectOutputStream.writeObject("FIM");
+					//textArea.append("Conexao esta aberto com cliente.: " + socket.getInetAddress().toString() + "\n");
+					//textArea.append("Enviando dados para o cliente..\n");
+
+					DataInputStream is = new DataInputStream(socket.getInputStream());
+					String responseLine;
+					responseLine = is.readLine();
+					//System.out.println("echo: " + responseLine);
+					textArea.append(responseLine + "\n");
+
 				}
 			} catch (IOException ex) {
-				JOptionPane.showMessageDialog(null, "Erro " + ex);
+				// JOptionPane.showMessageDialog(null, "Erro " + ex);
+				ex.printStackTrace();
 			}
 		}
 	}
